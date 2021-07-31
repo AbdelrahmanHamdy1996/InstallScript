@@ -104,9 +104,9 @@ else
 fi
 
 echo -e "\n---- Create ODOO system user ----"
-# sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
-# #The user should also be added to the sudo'ers group.
-# sudo adduser $OE_USER sudo
+sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
+#The user should also be added to the sudo'ers group.
+sudo adduser $OE_USER sudo
 
 echo -e "\n---- Create Log directory ----"
 sudo mkdir /var/log/$OE_USER
@@ -267,9 +267,11 @@ sudo update-rc.d $OE_CONFIG defaults
 if [ $INSTALL_NGINX = "True" ]; then
   echo -e "\n---- Installing and setting up Nginx ----"
   sudo apt install nginx -y
-  # Adjusting the Firewall
+
+# Adjusting the Firewall
+  echo -e "\n--------- Adjusting the Firewall"
   sudo ufw app list
-  sudo ufw allow 'Nginx Full'
+  sudo ufw allow 'Nginx HTTPS'
   sudo ufw status
 
 
