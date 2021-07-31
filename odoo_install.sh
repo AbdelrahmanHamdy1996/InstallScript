@@ -107,6 +107,9 @@ echo -e "\n---- Create ODOO system user ----"
 sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
 #The user should also be added to the sudo'ers group.
 sudo adduser $OE_USER sudo
+#Enabling External Access for Your odoo User
+sudo rsync --archive --chown=$OE_USER:$OE_USER ~/.ssh /home/$OE_USER
+
 
 echo -e "\n---- Create Log directory ----"
 sudo mkdir /var/log/$OE_USER
@@ -271,10 +274,10 @@ if [ $INSTALL_NGINX = "True" ]; then
 # Adjusting the Firewall
   echo -e "\n--------- Adjusting the Firewall"
   sudo ufw app list
-  sudo ufw allow 'Nginx HTTPS'
+  sudo ufw allow 'Nginx Full'
+  sudo ufw allow OpenSSH
+  sudo ufw enable
   sudo ufw status
-
-
 
   cat <<EOF > ~/odoo
   server {
@@ -367,7 +370,7 @@ if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != 
   sudo add-apt-repository ppa:certbot/certbot -y && sudo apt-get update -y
   sudo apt-get install python3-certbot-nginx -y
   sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL --redirect
-  sudo certbot renew --dry-run
+  # sudo certbot renew --dry-run
   sudo service nginx reload
   echo "SSL/HTTPS is enabled!"
 else
