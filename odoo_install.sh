@@ -26,9 +26,9 @@ OE_PORT="8069"
 # IMPORTANT! This script contains extra libraries that are specifically needed for Odoo 13.0
 OE_VERSION="14.0"
 # Set this to True if you want to install the Odoo enterprise version!
-IS_ENTERPRISE="False"
+IS_ENTERPRISE="True"
 # Set this to True if you want to install Nginx!
-INSTALL_NGINX="False"
+INSTALL_NGINX="True"
 # Set the superadmin password - if GENERATE_RANDOM_PASSWORD is set to "True" we will automatically generate a random password, otherwise we use this one
 OE_SUPERADMIN="admin"
 # Set to "True" to generate a random password, "False" to use the variable in OE_SUPERADMIN
@@ -41,7 +41,7 @@ LONGPOLLING_PORT="8072"
 # Set to "True" to install certbot and have ssl enabled, "False" to use http
 ENABLE_SSL="True"
 # Provide Email to register ssl certificate
-ADMIN_EMAIL="odoo@example.com"
+ADMIN_EMAIL="hamdyabdelrahman200@gmail.com"
 ##
 ###  WKHTMLTOPDF download links
 ## === Ubuntu Trusty x64 & x32 === (for other distributions please replace these two links,
@@ -104,9 +104,9 @@ else
 fi
 
 echo -e "\n---- Create ODOO system user ----"
-sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
-#The user should also be added to the sudo'ers group.
-sudo adduser $OE_USER sudo
+# sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
+# #The user should also be added to the sudo'ers group.
+# sudo adduser $OE_USER sudo
 
 echo -e "\n---- Create Log directory ----"
 sudo mkdir /var/log/$OE_USER
@@ -267,6 +267,13 @@ sudo update-rc.d $OE_CONFIG defaults
 if [ $INSTALL_NGINX = "True" ]; then
   echo -e "\n---- Installing and setting up Nginx ----"
   sudo apt install nginx -y
+  # Adjusting the Firewall
+  sudo ufw app list
+  sudo ufw allow 'Nginx Full'
+  sudo ufw status
+
+
+
   cat <<EOF > ~/odoo
   server {
   listen 80;
@@ -342,7 +349,7 @@ EOF
 
   sudo mv ~/odoo /etc/nginx/sites-available/
   sudo ln -s /etc/nginx/sites-available/odoo /etc/nginx/sites-enabled/odoo
-  sudo rm /etc/nginx/sites-enabled/default
+  sudo rm /etc/nginx/sites-enabled/default  
   sudo service nginx reload
   sudo su root -c "printf 'proxy_mode = True\n' >> /etc/${OE_CONFIG}.conf"
   echo "Done! The Nginx server is up and running. Configuration can be found at /etc/nginx/sites-available/odoo"
@@ -358,6 +365,7 @@ if [ $INSTALL_NGINX = "True" ] && [ $ENABLE_SSL = "True" ] && [ $ADMIN_EMAIL != 
   sudo add-apt-repository ppa:certbot/certbot -y && sudo apt-get update -y
   sudo apt-get install python3-certbot-nginx -y
   sudo certbot --nginx -d $WEBSITE_NAME --noninteractive --agree-tos --email $ADMIN_EMAIL --redirect
+  sudo certbot renew --dry-run
   sudo service nginx reload
   echo "SSL/HTTPS is enabled!"
 else
