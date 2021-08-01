@@ -1,7 +1,7 @@
 new_user="Abdo"
 
 echo -e "\n---- Creating a New User ----"
-sudo adduser $new_user
+sudo adduser $new_user sudo
 
 echo -e "\n---- Granting Administrative Privileges ----"
 sudo usermod -aG sudo $new_user
