@@ -63,13 +63,6 @@ sudo add-apt-repository universe
 sudo add-apt-repository "deb http://mirrors.kernel.org/ubuntu/ xenial main"
 sudo apt-get update
 sudo apt-get upgrade -y
-#--------------------------------------------------------
-# Setting Up a Basic Firewall
-#--------------------------------------------------------
-echo -e "\n------ Setting Up a Basic Firewall ----"
-sudo ufw app list
-sudo ufw allow OpenSSH
-sudo ufw enable  -y
 
 
 #--------------------------------------------------
