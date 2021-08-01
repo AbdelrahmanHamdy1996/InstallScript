@@ -69,7 +69,7 @@ sudo apt-get upgrade -y
 echo -e "\n------ Setting Up a Basic Firewall ----"
 sudo ufw app list
 sudo ufw allow OpenSSH
-sudo ufw enable
+sudo ufw enable  -y
 
 
 #--------------------------------------------------
