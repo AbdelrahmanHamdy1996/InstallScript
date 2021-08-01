@@ -9,7 +9,7 @@ sudo usermod -aG sudo $new_user
 echo -e "\n---- Setting Up a Basic Firewall ----"
 sudo ufw app list
 sudo ufw allow OpenSSH
-sudo ufw enable -y
+sudo ufw enable
 sudo ufw status
 
 echo -e "\n---- Enabling External Access for Your Regular User ----"
